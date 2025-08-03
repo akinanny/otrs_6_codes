@@ -1,0 +1,87 @@
+use strict;
+use warnings;
+
+use FindBin qw($Bin);
+use lib "$Bin/Kernel/cpan-lib", "$Bin/";
+
+use Kernel::Config;
+use Kernel::System::Log;
+use Kernel::System::Main;
+use Kernel::System::Encode;
+use Kernel::System::Time;
+use Kernel::System::DB;
+use Kernel::System::Ticket;
+
+my $ConfigObject = Kernel::Config->new();
+my $LogObject    = Kernel::System::Log->new( ConfigObject => $ConfigObject );
+my $MainObject   = Kernel::System::Main->new( ConfigObject => $ConfigObject, LogObject => $LogObject );
+my $EncodeObject = Kernel::System::Encode->new( ConfigObject => $ConfigObject, LogObject => $LogObject, MainObject => $MainObject );
+my $TimeObject   = Kernel::System::Time->new( ConfigObject => $ConfigObject, LogObject => $LogObject, MainObject => $MainObject );
+my $DBObject     = Kernel::System::DB->new(
+    ConfigObject => $ConfigObject,
+    LogObject    => $LogObject,
+    MainObject   => $MainObject,
+    EncodeObject => $EncodeObject,
+);
+my $TicketObject = Kernel::System::Ticket->new(
+    ConfigObject => $ConfigObject,
+    LogObject    => $LogObject,
+    MainObject   => $MainObject,
+    DBObject     => $DBObject,
+    EncodeObject => $EncodeObject,
+    TimeObject   => $TimeObject,
+);
+print "TicketNumber,Title,Queue,Priority,State,CustomerID,CreateTime,Owner,Responsible,Subject,Body\n";
+
+my @TicketIDs = $TicketObject->TicketSearch(
+    StateType => 'Open',
+    Result    => 'ARRAY',
+    UserID    => 1,
+);
+
+for my $TicketID (@TicketIDs) {
+    my %Ticket = $TicketObject->TicketGet(
+        TicketID => $TicketID,
+        UserID   => 1,
+    );
+
+    # Fetch article IDs from the DB
+    my $SQL = "SELECT id FROM article WHERE ticket_id = ? ORDER BY id ASC";
+    return unless $DBObject->Prepare(
+        SQL  => $SQL,
+        Bind => [ \$TicketID ],
+    );
+
+    my $FirstArticleID;
+    while (my @Row = $DBObject->FetchrowArray()) {
+        $FirstArticleID = $Row[0];
+        last;
+    }
+    my %FirstArticle;
+    if ($FirstArticleID) {
+        %FirstArticle = $TicketObject->ArticleGet(
+            ArticleID => $FirstArticleID,
+            UserID    => 1,
+        );
+    }
+
+    my $TicketNumber = $Ticket{TicketNumber} // '';
+    my $Title        = $Ticket{Title}        // '';
+    my $Queue        = $Ticket{Queue}        // '';
+    my $Priority     = $Ticket{Priority}     // '';
+    my $State        = $Ticket{State}        // '';
+    my $CustomerID   = $Ticket{CustomerID}   // '';
+    my $CreateTime   = $Ticket{CreateTime}   // '';
+    my $Owner        = $Ticket{Owner}        // '';
+    my $Responsible  = $Ticket{Responsible}  // '';
+    my $Subject      = $FirstArticle{Subject} // '';
+    my $Body         = $FirstArticle{Body}    // '';
+
+    # Escape line breaks and quotes for CSV
+    for ($Title, $Subject, $Body) {
+        s/\r?\n/\\n/g;
+        s/"/""/g;
+    }
+
+    print "\"$TicketNumber\",\"$Title\",\"$Queue\",\"$Priority\",\"$State\",\"$CustomerID\",\"$CreateTime\",\"$Owner\",\"$Responsible\",\"$Subject\",\"$Body\"\n";
+}
