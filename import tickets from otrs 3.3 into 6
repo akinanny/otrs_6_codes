@@ -1,0 +1,42 @@
+bin/bash
+
+INPUT_FILE="tickets_full_export.csv"
+USERNAME="akinany"
+PASSWORD="qwedfg001"
+OTRS_URL="https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate"
+
+# Read CSV file line by line (skip the header)
+tail -n +2 "$INPUT_FILE" | while IFS=',' read -r TicketNumber Title Queue Priority State CustomerID CreateTime Owner Responsible Subject Body; do
+
+  # Strip quotes
+  Title=$(echo "$Title" | sed 's/^"//;s/"$//')
+  Queue=$(echo "$Queue" | sed 's/^"//;s/"$//')
+  Priority=$(echo "$Priority" | sed 's/^"//;s/"$//')
+  State=$(echo "$State" | sed 's/^"//;s/"$//')
+  Subject=$(echo "$Subject" | sed 's/^"//;s/"$//')
+  Body=$(echo "$Body" | sed 's/^"//;s/"$//')
+
+  echo "Importing ticket: \"$Title\""
+
+  # Force all CustomerUser to "8001110105"
+  curl -k -s -H "Content-Type: application/json" \
+    -X POST "$OTRS_URL" \
+    -d "{
+      \"UserLogin\": \"$USERNAME\",
+      \"Password\": \"$PASSWORD\",
+      \"Ticket\": {
+        \"Title\": \"$Title\",
+        \"Queue\": \"$Queue\",
+        \"State\": \"$State\",
+        \"Priority\": \"$Priority\",
+        \"CustomerUser\": \"8001110105\"
+      },
+      \"Article\": {
+        \"Subject\": \"$Subject\",
+        \"Body\": \"$Body\",
+        \"ContentType\": \"text/plain; charset=utf8\"
+      }
+    }"
+
+  echo -e "\n---"
+done
