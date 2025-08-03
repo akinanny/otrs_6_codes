@@ -1,0 +1,43 @@
+use strict;
+use warnings;
+
+use lib qw(/opt/otrs /opt/otrs/Kernel/cpan-lib);
+
+use Kernel::Config;
+use Kernel::System::Encode;
+use Kernel::System::Log;
+use Kernel::System::DB;
+use Kernel::System::User;
+
+my $ConfigObject = Kernel::Config->new();
+my $EncodeObject = Kernel::System::Encode->new( ConfigObject => $ConfigObject );
+my $LogObject    = Kernel::System::Log->new( ConfigObject => $ConfigObject );
+my $DBObject     = Kernel::System::DB->new(
+    ConfigObject => $ConfigObject,
+    EncodeObject => $EncodeObject,
+    LogObject    => $LogObject,
+);
+my $UserObject = Kernel::System::User->new(
+    ConfigObject => $ConfigObject,
+    EncodeObject => $EncodeObject,
+    DBObject     => $DBObject,
+    LogObject    => $LogObject,
+);
+
+my %Users = $UserObject->UserList( Type => 'Short' );
+
+open(my $fh, '>', 'agents_export.csv') or die "Cannot open file: $!";
+print $fh "UserLogin,UserFirstname,UserLastname,UserEmail\n";
+
+for my $UserID (sort keys %Users) {
+    my %UserData = $UserObject->GetUserData( UserID => $UserID, NoPassword => 1 );
+    print $fh join(',',
+        $UserData{UserLogin}     || '',
+        $UserData{UserFirstname} || '',
+        $UserData{UserLastname}  || '',
+        $UserData{UserEmail}     || '',
+    ), "\n";
+}
+
+close($fh);
+print "Agents exported to agents_export.csv\n";
