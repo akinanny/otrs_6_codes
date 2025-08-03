@@ -1,0 +1,17 @@
+  -X POST https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate \
+  -d '{
+    "UserLogin": "akinany",
+    "Password": "qwedfg001",
+    "Ticket": {
+      "Title": "Imported Ticket 1",
+      "Queue": "Raw",
+      "State": "new",
+      "Priority": "3 normal",
+      "CustomerUser": "8001110105"
+    },
+    "Article": {
+      "Subject": "Ticket 1 Article",
+      "Body": "This is the content from export.",
+      "ContentType": "text/plain; charset=utf-8"
+    }
+  }'
