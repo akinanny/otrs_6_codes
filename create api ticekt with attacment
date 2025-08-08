@@ -1,0 +1,25 @@
+FILE=/root/derm_new_welcome_2025.wav
+B64=$(base64 -w0 "$FILE")   # macOS: base64 "$FILE" | tr -d '\n'
+curl -k -H "Content-Type: application/json" -X POST \
+"https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate" \
+--data-binary @- <<JSON
+{
+  "UserLogin": "akinany",
+  "Password": "Admin3e4r5t*awaLL",
+  "Ticket": {
+    "Title": "Imported Ticket 1",
+    "Queue": "Raw",
+    "State": "new",
+    "Priority": "3 normal",
+    "CustomerUser": "8001110105"
+  },
+  "Article": {
+    "Subject": "Imported Article",
+    "Body": "This is the exported content.",
+    "ContentType": "text/plain; charset=utf-8"
+  },
+  "Attachment": [
+    { "Filename": "$(basename "$FILE")", "Content": "$B64", "ContentType": "text/plain" }
+  ]
+}
+JSON
