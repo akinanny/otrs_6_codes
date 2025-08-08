@@ -5,7 +5,7 @@ curl -k -H "Content-Type: application/json" -X POST \
 --data-binary @- <<JSON
 {
   "UserLogin": "akinany",
-  "Password": "Admin3e4r5t*awaLL",
+  "Password": "pass",
   "Ticket": {
     "Title": "Imported Ticket 1",
     "Queue": "Raw",
