@@ -1,4 +1,5 @@
-  -X POST https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate \
+curl -k -H "Content-Type: application/json" \
+-X POST https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate \
   -d '{
     "UserLogin": "akinany",
     "Password": "",
