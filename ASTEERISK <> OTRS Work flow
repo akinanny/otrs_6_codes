@@ -1,0 +1,28 @@
+ASTEERISK <> OTRS Work flow
+
+   Customer Calls Your Number
+              │
+              ▼
+     IVR: "Press 1 to record
+     a message for support"
+              │
+              ▼
+   Customer Records Voice Message
+     (Press # or 0 when done)
+              │
+              ▼
+  [ Asterisk Voice Gateway Server ]
+      - Saves audio recording
+      - Base64 encodes file
+      - Calls OTRS API
+              │
+              ▼
+    [ OTRS / Helpdesk System ]
+      - Creates new ticket
+      - Attaches audio file
+      - Includes caller ID & metadata
+              │
+              ▼
+    Support Team Receives Ticket
+      - Plays audio in browser
+      - Responds & tracks case
