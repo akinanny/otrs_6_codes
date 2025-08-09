@@ -1,4 +1,13 @@
-FILE=/root/derm_new_welcome_2025.wav
+#!/usr/bin/env bash
+FILE="$1"
+CALLER="$2"
+UNIQ="$3"
+logger -t asterisk "New recording from ${CALLER} (${UNIQ}): ${RECFILE}"
+# do your stuff: move/upload/notify/etc.
+#exit 0
+
+
+#FILE="$1"
 B64=$(base64 -w0 "$FILE")   # macOS: base64 "$FILE" | tr -d '\n'
 curl -k -H "Content-Type: application/json" -X POST \
 "https://takaful-helpdesk.anmarit.com/otrs/nph-genericinterface.pl/Webservice/ImportTickets/TicketCreate" \
@@ -7,15 +16,15 @@ curl -k -H "Content-Type: application/json" -X POST \
   "UserLogin": "akinany",
   "Password": "pass",
   "Ticket": {
-    "Title": "Imported Ticket 1",
-    "Queue": "Raw",
+    "Title": "Call Center Recording Message-${CALLER}",
+    "Queue": "IVR_Recording",
     "State": "new",
     "Priority": "3 normal",
     "CustomerUser": "8001110105"
   },
   "Article": {
-    "Subject": "Imported Article",
-    "Body": "This is the exported content.",
+    "Subject": "${CALLER}",
+    "Body": "This is a recording Message ${UNIQ} from The Call Center from Number: ${CALLER}",
     "ContentType": "text/plain; charset=utf-8"
   },
   "Attachment": [
