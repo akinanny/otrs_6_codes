@@ -84,3 +84,25 @@ VoiceDesk Connect™ – Helpdesk Voice Automation Service
     Add-ons: Speech-to-text transcription, analytics dashboard, multiple queue routing.
 
 
+
+
+VoiceDesk Connect™
+Helpdesk Voice Automation Service
+VoiceDesk Connect™ enables your customers to create helpdesk tickets simply by calling your
+support number and leaving a message. The system automatically records the voice message,
+attaches it to a new ticket in your helpdesk system, and includes caller information for your support
+team.
+Workflow Overview
+Customer CallsPress 1 to recordRecord Voice MessageAsterisk Voice GatewayHelpdesk SystemSupport Team
+%n n n nn n nnn
+Key Features
+Direct Voice Capture: Customers can leave a voice message without email or forms. Automated
+Ticket Creation: Each call creates a new ticket with the audio file attached. System Integration:
+Works with OTRS, Zammad, Zendesk, Freshdesk, and more. Customizable IVR Flow: Route calls
+to different queues based on input. Secure & Compliant: Encrypted connections, secure storage,
+and access controls. Optional Add-Ons: Speech-to-text transcription, auto-tagging, and analytics.
+Example Commercial Package
+Setup Fee: Covers IVR design, integration, and testing.
+Monthly Subscription: Covers hosting, maintenance, and updates.
+Add-ons: Speech-to-text transcription, analytics dashboard, multiple queue routing.
+
