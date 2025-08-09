@@ -26,3 +26,61 @@ ASTEERISK <> OTRS Work flow
     Support Team Receives Ticket
       - Plays audio in browser
       - Responds & tracks case
+
+
+
+
+✨ Key Features
+1. Direct Voice Capture
+
+    Customers can leave a voice message without email or web forms.
+
+    Works with landline or mobile calls.
+
+2. Automated Ticket Creation
+
+    Each call creates a new helpdesk ticket instantly.
+
+    Audio file automatically attached.
+
+    Caller ID stored as ticket metadata.
+
+3. System Integration
+
+    Native OTRS integration (via GenericInterface API).
+
+    Adaptable to Zammad, Zendesk, Freshdesk, ServiceNow, etc.
+
+4. Customizable IVR Flow
+
+    Add menus (e.g., “Press 2 for billing”).
+
+    Route to different ticket queues based on key pressed.
+
+5. Secure & Compliant
+
+    All recordings stored securely on your server.
+
+    HTTPS API calls to the helpdesk.
+
+    Access control via ticketing system permissions.
+
+6. Optional Add-Ons
+
+    Speech-to-Text transcription.
+
+    Auto-Tagging based on keywords in audio/transcription.
+
+    Language Detection for multilingual support.
+
+💼 Example Commercial Package
+
+VoiceDesk Connect™ – Helpdesk Voice Automation Service
+
+    Setup Fee: Covers IVR design, integration, and testing.
+
+    Monthly Subscription: Covers hosting, maintenance, and updates.
+
+    Add-ons: Speech-to-text transcription, analytics dashboard, multiple queue routing.
+
+
