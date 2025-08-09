@@ -1,0 +1,6 @@
+asterisk <> otrs
+create IVR for outside working times behind time conditions. offer option 9 to go to record a message by press 9
+once press 9  go to queue 33
+confireu the dialplan for queue 33 in asterisk /etc
+create the bash script which called by dialplan
+in the bashscript will call OTRS web service/create ticket to create the ticket with attachment.
