@@ -1,0 +1,30 @@
+[ext-queues]
+
+exten => 33,1,Answer()
+ same => n,Set(TIMEOUT(digit)=5)
+
+ ; Safe, readable filename: YYYYMMDD-HHMMSS-CALLER-UID.wav
+ same => n,Set(UID_SAFE=${REPLACE(${UNIQUEID},.,-)})
+ same => n,ExecIf($["${UID_SAFE}"=""]?Set(UID_SAFE=${EPOCH}-${RAND(1000,9999)}))
+ same => n,Set(RECFILE=/var/spool/asterisk/recordings/${STRFTIME(${EPOCH},,%Y%m%d-%H%M%S)}-${CALLERID(num)}-${UID_SAFE}.wav)
+
+ ; Ask to press 1 to start
+ #same => n,Read(OPT,custom/leave_message,1,,3,5)
+ #same => n,GotoIf($["${OPT}"="1"]?doRec:end)
+
+ ; --- Record path ---
+ #same => n(doRec)  ; "Record your message. Press #  when done."
+ same => n(doRec),Playback(beep)
+
+ ; Record(filename_with_ext[,silence[,maxduration[,options]]])
+ ; 0 = no silence cutoff; 180s max; k = keep file on hangup; o = stop when '0' pressed (RECORD_STATUS=OPERATOR)
+ same => n,Record(${RECFILE},0,180,ko)
+
+ ; After recording ends -> run script, say goodbye, hang up
+ same => n,System(/etc/asterisk/after_record.sh ${RECFILE} "${CALLERID(num)}" "${UNIQUEID}")
+ same => n,Playback(custom/sallam_saudi)
+ same => n,Hangup()
+
+ ; --- No / invalid key ---
+ same => n(end),Playback(custom/sallam_saudi)
+ same => n,Hangup()
